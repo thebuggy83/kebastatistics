@@ -85,7 +85,10 @@ def parse_broadcast(jsonData):
     #sInput = jsonList["Input"]
     #sEnableSys = jsonList["Enable sys"]
     #sMaxCurr = jsonList["Max curr"]
-    sEpres = jsonData["E pres"]  
+    
+    sEpres_RAW = jsonData["E pres"]  
+    # Convert value to Watt-hours
+    sEpres = sEpres_RAW / 10
 
     logger.info("Reading Data - Broadcast: " + " E pres: " + str(sEpres))
         #----- State: " + str(sState) + " , Plug: " + str(sPlug) 
@@ -119,6 +122,7 @@ def parse_report(jsonData):
     dbrsfield = None
     sSessionID = None
     sEstart = None
+    sEpres_RAW = None
     sEpres = None
     sStarted = None
     sEnded = None
@@ -136,14 +140,14 @@ def parse_report(jsonData):
     
     sSessionID = jsonData["Session ID"] 
     sEstart = jsonData["E start"]
-    sEpres = jsonData["E pres"]  
+    sEpres_RAW = jsonData["E pres"]  
     sStarted = jsonData["started"]
     sEnded = jsonData["ended"]
     sReason = jsonData["reason"]
     sRFIDTag = jsonData["RFID tag"]
-
+    
     logger.info("Reading Data - Report: ----- SessionID: " + str(sSessionID) + " , E-Start: " + str(sEstart) 
-              + " E-Pres: " + str(sEpres) + " started: " + str(sStarted) + " ended: " + str(sEnded) 
+              + " E-Pres: " + str(sEpres_RAW) + " started: " + str(sStarted) + " ended: " + str(sEnded) 
               + " reason: " + str(sReason) + " RFID-Tag: " + str(sRFIDTag) )
 
     #"ID": "101",
@@ -164,6 +168,9 @@ def parse_report(jsonData):
 
     # Creating Database Connection
     connection=DB_connect()
+
+    # Convert value to Watt-hours
+    sEpres = sEpres_RAW / 10
 
     # Converting Start Datetime to Date and Time
     sDateTimeS = datetime.datetime.strptime(sStarted, "%Y-%m-%d %H:%M:%S.%f")
