@@ -90,9 +90,9 @@ def parse_broadcast(jsonData):
     
     sEpres_RAW = jsonData["E pres"]  
     # Convert value to Watt-hours
-    logger.info("Power Value: " + sEpres_RAW)
+    logger.info("Power Value: " + str(sEpres_RAW))
     sEpres = float(sEpres_RAW / 10)
-    logger.info("Power Value: " + sEpres_RAW)
+    logger.info("Power Value: " + str(sEpres_RAW))
 
     logger.info("Reading Data - Broadcast: " + " E pres: " + str(sEpres))
         #----- State: " + str(sState) + " , Plug: " + str(sPlug) 
@@ -179,9 +179,9 @@ def parse_report(jsonData):
     connection=DB_connect()
 
     # Convert value to Watt-hours
-    logger.info("Power Value: " + sEpres_RAW)
+    logger.info("Power Value: " + str(sEpres_RAW))
     sEpres = float(sEpres_RAW / 10)
-    logger.info("Power Value: " + sEpres_RAW)
+    logger.info("Power Value: " + str(sEpres_RAW)
 
     # Converting Start Datetime to Date and Time
     sDateTimeS = datetime.datetime.strptime(sStarted, "%Y-%m-%d %H:%M:%S.%f")
@@ -219,10 +219,10 @@ def parse_report(jsonData):
 
     if rowcount > 1:
         sUser = 0
-        logger.error("DATA ERROR - more than one user information found?!? --- Rowcount: " + rowcount)
+        logger.error("DATA ERROR - more than one user information found?!? --- Rowcount: " + str(rowcount))
 
     if rowcount < 1:
-        logger.error("DATA ERROR - no user information found! --- Rowcount: " + rowcount)
+        logger.error("DATA ERROR - no user information found! --- Rowcount: " + str(rowcount))
         sUser = 0
 
     rowcount = None
@@ -242,11 +242,11 @@ def parse_report(jsonData):
             sEndReason = field[0]
 
     if rowcount > 1:
-        logger.error("DATA ERROR - more than one EndReason information found?!? --- Rowcount: " + rowcount)
+        logger.error("DATA ERROR - more than one EndReason information found?!? --- Rowcount: " + str(rowcount))
         sEndReason = None
 
     if rowcount < 1:
-        logger.error("DATA ERROR - no EndReason Information found?!? --- Rowcount: " + rowcount)
+        logger.error("DATA ERROR - no EndReason Information found?!? --- Rowcount: " + str(rowcount))
         sEndReason = None
 
     rowcount = None
