@@ -265,7 +265,7 @@ def parse_report(jsonData):
         insertReportSQL = """INSERT INTO sessions (s_session_id, s_E_start, s_E_pres, s_started_date, s_starttime, s_start_timestamp, 
                                              s_end_date, s_endtime, s_end_timestamp, s_end_reason, s_user) 
                                              VALUE (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """
-        cursor.execute(insertReportSQL, (sSessionID, sEstart, sEpres, sStartDate, sStartTime, sStartTimestamp sEndDate, sEndTime, 
+        cursor.execute(insertReportSQL, (sSessionID, sEstart, sEpres, sStartDate, sStartTime, sStartTimestamp, sEndDate, sEndTime, 
                                          sEndTimestamp, sEndReason, sUser, ))
         connection.commit()
         logger.info("Inserating into Database into Table sessions: " + "SessionID: " + str(sSessionID) + ", E-Start: " + str(sEstart)
