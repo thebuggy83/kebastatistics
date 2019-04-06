@@ -1,2 +1,2 @@
 # kebastatistics
-KEBA P30c UDP Server MySQL PHP Interface
+KEBA P30c UDP Server MySQL Pyhton Interface
