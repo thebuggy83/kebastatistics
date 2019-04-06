@@ -98,15 +98,18 @@ def parse_broadcast(jsonData):
     #sNowDateTime = datetime.datetime.strptime(sNow, "%Y-%m-%d %H:%M:%S.%f")
     sNowDate = sNow.date()
     sNowTime = sNow.time()
+    # Converting Start Datetime to Unix Timestamp (for Grafana Graphs)
+    sDateTimeN = datetime.datetime(sNow, "%Y-%m-%d %H:%M:%S.%f")   
+    sNowTimestamp = time.mktime(sDateTimeN.timetuple())
 
     connection=DB_connect()
     cursor = connection.cursor()
-    insertBroadcastSQL = """INSERT INTO charging (c_date, c_time, c_E_pres) 
-                                         VALUE (%s, %s, %s) """
-    cursor.execute(insertBroadcastSQL, (sNowDate, sNowTime, sEpres))
+    insertBroadcastSQL = """INSERT INTO charging (c_date, c_time, c_timestamp, c_E_pres) 
+                                         VALUE (%s, %s, %s, %s) """
+    cursor.execute(insertBroadcastSQL, (sNowDate, sNowTime, sNowTimestamp, sEpres))
     connection.commit()
     logger.info("Inserating into Database into Table charging: " + "Date: " + str(sNowDate) + ", Time: " + str(sNowTime)
-              + ", E-Pres: " + str(sEpres) )
+              + ", NowTimestamp: " + str(sNowTimestamp) + ", E-Pres: " + str(sEpres) )
     cursor.close()
     del cursor
 
@@ -133,8 +136,10 @@ def parse_report(jsonData):
     sDateTimeE = None
     sStartDate = None
     sStartTime = None
+    sStartTimestamp = None
     sEndDate = None
     sEndTime = None
+    sEndTimestamp = None
     sRFIDTag = None
     sUser = None
     
@@ -176,16 +181,23 @@ def parse_report(jsonData):
     sDateTimeS = datetime.datetime.strptime(sStarted, "%Y-%m-%d %H:%M:%S.%f")
     sStartDate = sDateTimeS.date()
     sStartTime = sDateTimeS.time()
+    # Converting Start Datetime to Unix Timestamp (for Grafana Graphs)
+    sDateTimeS = datetime.datetime(sStarted, "%Y-%m-%d %H:%M:%S.%f")   
+    sStartTimestamp = time.mktime(sDateTimeS.timetuple())
     
     # Converting End Datetime to Date and Time
     try: 
         sDateTimeE = datetime.datetime.strptime(sEnded, "%Y-%m-%d %H:%M:%S.%f")
         sEndDate = sDateTimeE.date()
         sEndTime = sDateTimeE.time()
+        # Converting Start Datetime to Unix Timestamp (for Grafana Graphs)
+        sDateTimeE = datetime.datetime(sEnded, "%Y-%m-%d %H:%M:%S.%f")   
+        sEndTimestamp = time.mktime(sDateTimeE.timetuple())
     except: 
         logger.info("Current session running, no end datetime")
         sEndDate = None
         sEndTime = None
+        sEndTimestamp = None
 
     # getting User ID with RFID Tag ID
     cursor = connection.cursor()
@@ -250,24 +262,25 @@ def parse_report(jsonData):
     if rowcount == 0:
     # if no the INSERT a new row into the database
         cursor = connection.cursor()
-        insertReportSQL = """INSERT INTO sessions (s_session_id, s_E_start, s_E_pres, s_started_date, s_starttime, 
-                                             s_end_date, s_endtime, s_end_reason, s_user) 
-                                             VALUE (%s, %s, %s, %s, %s, %s, %s, %s, %s) """
-        cursor.execute(insertReportSQL, (sSessionID, sEstart, sEpres, sStartDate, sStartTime, sEndDate, sEndTime, 
-                                         sEndReason, sUser, ))
+        insertReportSQL = """INSERT INTO sessions (s_session_id, s_E_start, s_E_pres, s_started_date, s_starttime, s_start_timestamp, 
+                                             s_end_date, s_endtime, s_end_timestamp, s_end_reason, s_user) 
+                                             VALUE (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """
+        cursor.execute(insertReportSQL, (sSessionID, sEstart, sEpres, sStartDate, sStartTime, sStartTimestamp sEndDate, sEndTime, 
+                                         sEndTimestamp, sEndReason, sUser, ))
         connection.commit()
         logger.info("Inserating into Database into Table sessions: " + "SessionID: " + str(sSessionID) + ", E-Start: " + str(sEstart)
                   + ", E-Pres: " + str(sEpres) + ", StartDate: " + str(sStartDate) + ", Starttime: " + str(sStartTime)
-                  + ", EndDate: " + str(sEndDate) + ", Endtime: " + str(sEndTime) + ", Reason: " + str(sEndReason)
+                  + ", Starttimestamp: " + str(sStartTimestamp) + ", EndDate: " + str(sEndDate) + ", Endtime: " + str(sEndTime) 
+                  + ", Endtimestamp: " + str(sEndTimestamp) + ", Reason: " + str(sEndReason)
                   + ", User: " + str(sUser) )
     if rowcount == 1:
     # if yes the UPDATE it
         cursor = connection.cursor()
-        updateReportSQL = "UPDATE sessions SET s_E_pres=%s, s_end_date=%s, s_endtime=%s, s_end_reason=%s WHERE s_session_id = %s"
-        cursor.execute(updateReportSQL, (sEpres, sEndDate, sEndTime, sEndReason, sSessionID, ))
+        updateReportSQL = "UPDATE sessions SET s_E_pres=%s, s_end_date=%s, s_endtime=%s, s_end_timestamp=%s, s_end_reason=%s WHERE s_session_id = %s"
+        cursor.execute(updateReportSQL, (sEpres, sEndDate, sEndTime, sEndTimestamp, sEndReason, sSessionID, ))
         connection.commit()
         logger.info("Updating Database - Table sessions: " + "SessionID: " + str(sSessionID) + ", E-Pres: " + str(sEpres) 
-                  + ", EndDate: " + str(sEndDate) + ", Endtime: " + str(sEndTime) + ", Reason: " + str(sEndReason) )
+                  + ", EndDate: " + str(sEndDate) + ", Endtime: " + str(sEndTime) + ", Endtimestamp: " + str(sEndTimestamp) + ", Reason: " + str(sEndReason) )
 
     cursor.close()
     del cursor
