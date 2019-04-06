@@ -79,6 +79,7 @@ def parse_broadcast(jsonData):
     #sInput = None
     #sEnableSys = None
     #sMaxCurr = None
+    sEpres_RAW = 0.0
     sEpres = 0.0
     
     #sState = jsonList["State"] 
@@ -89,7 +90,9 @@ def parse_broadcast(jsonData):
     
     sEpres_RAW = jsonData["E pres"]  
     # Convert value to Watt-hours
+    logger.info("Power Value: " + sEpres_RAW)
     sEpres = float(sEpres_RAW / 10)
+    logger.info("Power Value: " + sEpres_RAW)
 
     logger.info("Reading Data - Broadcast: " + " E pres: " + str(sEpres))
         #----- State: " + str(sState) + " , Plug: " + str(sPlug) 
@@ -126,7 +129,7 @@ def parse_report(jsonData):
     dbrsfield = None
     sSessionID = None
     sEstart = None
-    sEpres_RAW = None
+    sEpres_RAW = 0.0
     sEpres = 0.0
     sStarted = None
     sEnded = None
@@ -176,7 +179,9 @@ def parse_report(jsonData):
     connection=DB_connect()
 
     # Convert value to Watt-hours
+    logger.info("Power Value: " + sEpres_RAW)
     sEpres = float(sEpres_RAW / 10)
+    logger.info("Power Value: " + sEpres_RAW)
 
     # Converting Start Datetime to Date and Time
     sDateTimeS = datetime.datetime.strptime(sStarted, "%Y-%m-%d %H:%M:%S.%f")
