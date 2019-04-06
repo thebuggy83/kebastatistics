@@ -99,8 +99,8 @@ def parse_broadcast(jsonData):
     sNowDate = sNow.date()
     sNowTime = sNow.time()
     # Converting Start Datetime to Unix Timestamp (for Grafana Graphs)
-    sDateTimeN = datetime.datetime(sNow, "%Y-%m-%d %H:%M:%S.%f")   
-    sNowTimestamp = time.mktime(sDateTimeN.timetuple())
+    #sDateTimeN = datetime.datetime(sNow, "%Y-%m-%d %H:%M:%S.%f")   
+    sNowTimestamp = time.mktime(sNow.timetuple())
 
     connection=DB_connect()
     cursor = connection.cursor()
@@ -182,7 +182,7 @@ def parse_report(jsonData):
     sStartDate = sDateTimeS.date()
     sStartTime = sDateTimeS.time()
     # Converting Start Datetime to Unix Timestamp (for Grafana Graphs)
-    sDateTimeS = datetime.datetime(sStarted, "%Y-%m-%d %H:%M:%S.%f")   
+    # sDateTimeS = datetime.datetime(sStarted, "%Y-%m-%d %H:%M:%S.%f")   
     sStartTimestamp = time.mktime(sDateTimeS.timetuple())
     
     # Converting End Datetime to Date and Time
@@ -191,7 +191,7 @@ def parse_report(jsonData):
         sEndDate = sDateTimeE.date()
         sEndTime = sDateTimeE.time()
         # Converting Start Datetime to Unix Timestamp (for Grafana Graphs)
-        sDateTimeE = datetime.datetime(sEnded, "%Y-%m-%d %H:%M:%S.%f")   
+        #sDateTimeE = datetime.datetime(sEnded, "%Y-%m-%d %H:%M:%S.%f")   
         sEndTimestamp = time.mktime(sDateTimeE.timetuple())
     except: 
         logger.info("Current session running, no end datetime")
