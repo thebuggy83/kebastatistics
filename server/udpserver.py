@@ -89,7 +89,7 @@ def parse_broadcast(jsonData):
     
     sEpres_RAW = jsonData["E pres"]  
     # Convert value to Watt-hours
-    sEpres = sEpres_RAW / 10
+    sEpres = float(sEpres_RAW / 10)
 
     logger.info("Reading Data - Broadcast: " + " E pres: " + str(sEpres))
         #----- State: " + str(sState) + " , Plug: " + str(sPlug) 
@@ -176,7 +176,7 @@ def parse_report(jsonData):
     connection=DB_connect()
 
     # Convert value to Watt-hours
-    sEpres = sEpres_RAW / 10
+    sEpres = float(sEpres_RAW / 10)
 
     # Converting Start Datetime to Date and Time
     sDateTimeS = datetime.datetime.strptime(sStarted, "%Y-%m-%d %H:%M:%S.%f")
